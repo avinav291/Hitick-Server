@@ -2,14 +2,27 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+
+// Cookies and Body Parsers
+var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
+
+// Session Management
 var session = require("express-session");
 var flash = require("connect-flash");
-var bodyParser = require('body-parser');
 
+// Passport Authentication
+var passport = require('passport');
+var setupPassport = require('./setupPassport');
+
+// Database Module
+var mongoose = require('mongoose');
+
+// Routers
 var routes = require('./routes/index');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
+var logout = require('./routes/logout');
 
 var app = express();
 
@@ -25,6 +38,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Connect to the database
+mongoose.connect('mongodb://localhost:27017/HitickDb');
+
 //Session Middleware
 app.use(session({
     secret: "TKRv0IJs=HYqrvagQ#&!F!%V]Ww/4KiVs$s,<<MX",
@@ -32,17 +48,18 @@ app.use(session({
     saveUninitialized: true
 }));
 
+// Setup Passport
+setupPassport();
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Flash Middleware
 app.use(flash());
-app.use(function (request, response, next) {
-    response.locals.errors = request.flash("error");
-    response.locals.infos = request.flash("info");
-    next();
-});
 
 app.use('/', routes);
 app.use('/login', login);
 app.use('/signup' , signup);
+app.use('/logout' , logout);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

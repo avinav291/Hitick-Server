@@ -8,12 +8,11 @@ var bcrypt = require("bcrypt-nodejs");
 var SALT_FACTOR = 10;
 
 // Create a User Schema
-var userSchema = mongoose.schema({
+var userSchema = mongoose.Schema({
     username: {type: String, required: true},
     password: {type: String, required: true},
     mobile: {type: String, required: true, unique: true},
     email: String,
-    institution: String,
     gcmRegId: String,
     groups: Array
 });
@@ -46,11 +45,11 @@ userSchema.pre("save", function (done) {
     });
 });
 
-userSchema.methods.checkPassword = function (guess , done) {
-    bcrypt.compare(guess , this.password , function(error , isMatch){
-        done(error , isMatch);
+userSchema.methods.checkPassword = function (guess, done) {
+    bcrypt.compare(guess, this.password, function (error, isMatch) {
+        done(error, isMatch);
     });
 };
 
-var User = userSchema.model("User" , userSchema);
+var User = mongoose.model("User", userSchema);
 module.exports = User;

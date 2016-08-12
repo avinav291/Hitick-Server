@@ -4,7 +4,7 @@
 var mongoose = require("mongoose");
 
 // Define the Poll's structure
-var pollSchema = mongoose.schema({
+var pollSchema = mongoose.Schema({
     groupId: {type: ObjectId, required: true},
     pollTopic: {type: String, required: true},
     submittedAt: {type: Date, required: true},

@@ -7,7 +7,7 @@ var bcrypt = require("bcrypt-nodejs");
 var SALT_FACTOR = 10;
 
 // Create a group schema
-var groupSchema = mongoose.schema({
+var groupSchema = mongoose.Schema({
     groupName: {type: String, required: true, unique: true},
     groupPassword: {type: String, required: true},
     groupMembers: Number,
