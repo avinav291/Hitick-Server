@@ -49,8 +49,13 @@
     </div>
     <% }); %>
 
-    <!-- The list of the groups -->
-
+    <!-- Login Form -->
+    <h1>Login</h1>
+    <form action="/login" method="post">
+        <input type="text" class="form-control" name="mobile" placeholder="Mobile Number">
+        <input type="password" class="form-control" name="password" placeholder="Password">
+        <input type="submit" value="Log In" class="btn btn-primary btn-block">
+    </form>
 </div>
+
 </body>
-<% include _footer.ejs %>
