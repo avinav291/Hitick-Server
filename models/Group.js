@@ -3,6 +3,8 @@
  */
 var mongoose = require("mongoose");
 var bcrypt = require("bcrypt-nodejs");
+var Schema = require("mongoose/lib/schema.js");
+
 
 var SALT_FACTOR = 10;
 
@@ -11,7 +13,7 @@ var groupSchema = mongoose.Schema({
     groupName: {type: String, required: true, unique: true},
     groupPassword: {type: String, required: true},
     groupMembers: Number,
-    adminId: ObjectId
+    adminId: Schema.Types.ObjectId
 });
 
 groupSchema.methods.name = function () {
@@ -41,6 +43,10 @@ groupSchema.pre("save", function (done) {
         });
     });
 });
+
+groupSchema.methods.name = function () {
+    return this.groupName;
+};
 
 groupSchema.methods.checkPassword = function (guess , done) {
   bcrypt.compare(guess , this.password , function(error , isMatch){
