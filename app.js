@@ -23,6 +23,8 @@ var routes = require('./routes/index');
 var login = require('./routes/login');
 var signup = require('./routes/signup');
 var logout = require('./routes/logout');
+var create = require('./routes/create');
+var join = require('./routes/join');
 
 //API Router
 var api-v1 = require('./api/v1')
@@ -63,6 +65,8 @@ app.use('/', routes);
 app.use('/login', login);
 app.use('/signup' , signup);
 app.use('/logout' , logout);
+app.use('/create' , create);
+app.use('/join' , join);
 
 //Route for all API requets
 app.use('/api/v1', api-v1)
