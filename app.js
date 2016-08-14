@@ -24,6 +24,9 @@ var login = require('./routes/login');
 var signup = require('./routes/signup');
 var logout = require('./routes/logout');
 
+//API Router
+var api-v1 = require('./api/v1')
+
 var app = express();
 
 // view engine setup
@@ -60,6 +63,9 @@ app.use('/', routes);
 app.use('/login', login);
 app.use('/signup' , signup);
 app.use('/logout' , logout);
+
+//Route for all API requets
+app.use('/api/v1', api-v1)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
