@@ -56,4 +56,13 @@ $(function () {
             }
         });
     });
+
+    $(".list-item").click(function () {
+        // Make a get request for the group page
+        $.get('/group', {groupId: $(this).attr("data-groupId")}, function (data) {
+            console.log(data);
+            console.log(data.redirect);
+            window.location.href = data.redirect;
+        });
+    });
 });
