@@ -27,7 +27,7 @@ var create = require('./routes/create');
 var join = require('./routes/join');
 
 //API Router
-var api-v1 = require('./api/v1')
+var api_v1 = require('./api/v1')
 
 var app = express();
 
@@ -69,7 +69,7 @@ app.use('/create' , create);
 app.use('/join' , join);
 
 //Route for all API requets
-app.use('/api/v1', api-v1)
+app.use('/api/v1', api_v1)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

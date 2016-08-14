@@ -4,7 +4,12 @@ var api = express.Router()
 
 var login = require('./login')
 
-api.get("/login", login())
-api.get("/signup", signup())
+api.get("/login", function(req, res){
+	console.log("Got GET Request on login")
+	login(req, res)
+})
+// api.get("/signup", function(req, res){
+// 	signup(req, res)
+// })
 
 module.exports = api
