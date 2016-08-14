@@ -64,11 +64,13 @@
     <!-- The list of the groups -->
     <% if (groups) { %>
     <% groups.forEach(function (group) { %>
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <%= group.name() %>
+    <a href="javascript:void(0)" class="list-item" data-groupId="<%= group._id %>" style="text-decoration: none">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <%= group.name() %>
+            </div>
         </div>
-    </div>
+    </a>
     <% }); %>
     <% } %>
 </div>
