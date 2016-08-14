@@ -27,6 +27,9 @@ var create = require('./routes/create');
 var join = require('./routes/join');
 var group = require('./routes/group');
 
+//API Router
+var api_v1 = require('./api/v1')
+
 var app = express();
 
 // view engine setup
@@ -66,6 +69,9 @@ app.use('/logout', logout);
 app.use('/create', create);
 app.use('/join', join);
 app.use('/group', group);
+
+//Route for all API requets
+app.use('/api/v1', api_v1)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
