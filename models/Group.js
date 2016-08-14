@@ -34,11 +34,11 @@ groupSchema.pre("save", function (done) {
         if (error) {
             return done(error);
         }
-        bcrypt.hash(group.password , salt , noop , function(error , hashedPassword){
+        bcrypt.hash(group.groupPassword , salt , noop , function(error , hashedPassword){
             if(error){
                 done(error);
             }
-            this.password = hashedPassword;
+            group.groupPassword = hashedPassword;
             done();
         });
     });
@@ -49,7 +49,7 @@ groupSchema.methods.name = function () {
 };
 
 groupSchema.methods.checkPassword = function (guess , done) {
-  bcrypt.compare(guess , this.password , function(error , isMatch){
+  bcrypt.compare(guess , this.groupPassword , function(error , isMatch){
      done(error , isMatch);
   });
 };

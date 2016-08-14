@@ -24,6 +24,7 @@ var login = require('./routes/login');
 var signup = require('./routes/signup');
 var logout = require('./routes/logout');
 var create = require('./routes/create');
+var join = require('./routes/join');
 
 var app = express();
 
@@ -62,6 +63,7 @@ app.use('/login', login);
 app.use('/signup' , signup);
 app.use('/logout' , logout);
 app.use('/create' , create);
+app.use('/join' , join);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -22,7 +22,8 @@ $(function () {
                         groupName: data.groupName,
                         groupPassword: data.groupPassword
                     }).done(function (data) {
-                        window.location.href = "/";
+                        console.log(data);
+                        window.location.href = data.redirect;
                     });
                 }
             }
@@ -44,7 +45,13 @@ $(function () {
                 if (!data) {
                     console.log('Cancelled')
                 } else {
-                    $.post('/join', {groupName: data.groupName, groupPassword: data.groupPassword});
+                    $.post('/join', {
+                        groupName: data.groupName,
+                        groupPassword: data.groupPassword
+                    }).done(function (data) {
+                        console.log(data);
+                        window.location.href = data.redirect;
+                    });
                 }
             }
         });

@@ -16,7 +16,7 @@ router.post("/", function (req, res, next) {
         }
         if (group) {
             req.flash("error", "Group already exists");
-            res.redirect("/");
+            res.send({redirect : '/'});
         }
         var admin = req.user;
 
@@ -26,20 +26,24 @@ router.post("/", function (req, res, next) {
             groupMembers: 1,
             adminId: admin._id
         });
-        newGroup.save(next);
 
-        // Add the group _id to admins groups array
-        User.update({_id: admin._id}, {$push: {groups: newGroup._id}}, null, function (err, numAffected) {
-            if (err) {
-                next(err);
+        newGroup.save(function (saveError) {
+            if (saveError) {
+                next(saveError);
             }
-            console.log("Udated the groups array");
-            next();
+            // Add the group _id to admins groups array
+            User.update({_id: admin._id}, {$push: {groups: newGroup._id}}, null, function (err, numAffected) {
+                if (err) {
+                    next(err);
+                }
+                console.log("Udated the groups array");
+                next();
+            });
         });
     });
-} , function (req , res ) {
+}, function (req, res) {
     console.log("Next called()");
-    res.redirect("/");
+    res.send({redirect : '/'});
 });
 
 module.exports = router;
