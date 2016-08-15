@@ -34,12 +34,12 @@ module.exports = function(req, res){
 				}
 				else{
 					//Check if the User is Already associated with the group
-					User.find({mobile :req.query.mobile, groups._id :group._id}, function(err, user){
+					User.find({mobile : req.query.mobile, groups : group._id }, function(err, user){
 						if(err){
-							res.json(error:"Internal Server Error:" + err)
+							res.json({error:"Internal Server Error:" + err})
 						}
 						if(user){
-							res.json(error:"User already associated with the Group")
+							res.json({error:"User already associated with the Group"})
 						}
 					})
 
@@ -62,13 +62,13 @@ module.exports = function(req, res){
 
 						User.update({mobile:req.query.mobile}, {$push:{ groups :group._id}}, null, function(err, numAffected){
 							if (err) {
-								res.json("Encountered Error while Updating: "+err)
+								res.json({error:"Encountered Error while Updating: " + err})
 							}
 							//Increment the group members
 							group.groupMembers.$inc()
-							group.save(function(err){
+							group.save(function(err, numAffected){
 								if(err){
-									res.json(error:"Error while saving Group"+ err)
+									res.json({error:"Error while saving Group"+ err})
 								}
 								res.json(group)
 							})
