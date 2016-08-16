@@ -1,6 +1,12 @@
+//
+//  api/v1/login.js
+//  Hitick-Server
+//
+//  Created by Avinav Goel on 14/08/16.
+//  Copyright © 2016 Avinav Goel. All rights reserved.
+//
 var express = require('express')
 var mongoose = require('mongoose')
-var bodyParser = require('body-parser')
 
 var User = require("../../models/User")
 var Group = require('../../models/Group')

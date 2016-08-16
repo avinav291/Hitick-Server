@@ -29,7 +29,7 @@ var group = require('./routes/group');
 var poll = require('./routes/poll');
 
 //API Router
-var api_v1 = require('./api/v1')
+var api_v1 = require('./api/v1');
 
 var app = express();
 
@@ -73,7 +73,7 @@ app.use('/group', group);
 app.use('/poll' , poll);
 
 //Route for all API requets
-app.use('/api/v1', api_v1)
+app.use('/api/v1', api_v1);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
