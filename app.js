@@ -26,6 +26,7 @@ var logout = require('./routes/logout');
 var create = require('./routes/create');
 var join = require('./routes/join');
 var group = require('./routes/group');
+var poll = require('./routes/poll');
 
 //API Router
 var api_v1 = require('./api/v1')
@@ -69,6 +70,7 @@ app.use('/logout', logout);
 app.use('/create', create);
 app.use('/join', join);
 app.use('/group', group);
+app.use('/poll' , poll);
 
 //Route for all API requets
 app.use('/api/v1', api_v1)
