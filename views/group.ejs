@@ -1,8 +1,70 @@
 <% include _header.ejs %>
+<script src="/javascripts/script.groups.js" defer></script>
 <body>
-<h1>
-    <%= group.name() %>
-</h1>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Hitick</a>
+        </div>
+        <ul class="nav navbar-nav navbar-right">
+            <% if(currentUser){ %>
+            <li>
+                <a href="javascript:void(0);">
+                    Hello, <%= currentUser.name() %>
+                </a>
+            </li>
+            <% if (group.adminId.equals(currentUser._id)) { %>
+            <li>
+                <a id="create-poll" href="javascript:void(0)">
+                    Push Poll
+                </a>
+            </li>
+            <% } %>
+            <li>
+                <a href="/logout">
+                    Logout
+                </a>
+            </li>
+            <% } %>
+        </ul>
+    </div>
+</nav>
+
+<!-- Group Name Header -->
+<div class="container">
+    <div class="page-header">
+        <h1>
+            <%= group.name() %>
+        </h1>
+    </div>
+</div>
+<div class="container">
+    <!-- The polls data -->
+    <% polls.forEach(function (poll) { %>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <%= poll.pollTopic %>
+        </div>
+        <div class="panel-body">
+            <ul class="list-inline">
+                <li>
+                    In Favor : <%= poll.inFavor %>
+                </li>
+                <li>
+                    Opposed : <%= poll.opposed %>
+                </li>
+                <li>
+                    Not Voted : <%= poll.notVoted %>
+                </li>
+            </ul>
+            <button class="btn btn-primary pull-right">Yes</button>
+            <button class="btn btn-primary pull-right">No</button>
+        </div>
+    </div>
+    <% }); %>
+</div>
 </body>
 
 <% include _footer.ejs %>
