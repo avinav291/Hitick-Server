@@ -14,6 +14,7 @@ var signup = require('./signup')
 var joinGrp = require('./joinGrp')
 var createGrp = require('./createGrp')
 var poll = require('./createPoll')
+var latestPoll = require('./latestPoll')
 
 api.get("/login", function(req, res){
 	console.log("Got GET Request on login")
@@ -40,5 +41,6 @@ api.get('/poll/new', function(req, res){
 })
 api.get('/poll/latest', function(req, res){
 	console.log('get all new polls for '+ req.query.userId)
+	latestPoll(req, res)
 })
 module.exports = api
