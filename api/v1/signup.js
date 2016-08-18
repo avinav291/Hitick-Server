@@ -21,9 +21,9 @@ module.exports = function(req, res){
 		if(user){
 			//User exists in the dataBase
 			res.json({error:"User already exists"})
-			return
 		}
 		else{
+			//Create New User with params
 			var newUser = new User({
 				username: req.query.username,
     			password: req.query.password,

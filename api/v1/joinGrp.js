@@ -33,8 +33,10 @@ module.exports = function(req, res){
 					res.json({error:"Password did not match: "})
 				}
 				else{
+
+					var userId = mongoose.Schema.Types.ObjectId(req.query.userId)
 					//Check if the User is Already associated with the group
-					User.find({mobile : req.query.mobile, groups : group._id }, function(err, user){
+					User.find({_id : userId, groups : group._id }, function(err, user){
 						if(err){
 							res.json({error:"Internal Server Error:" + err})
 						}
@@ -59,14 +61,14 @@ module.exports = function(req, res){
 					// 		})
 					// 	})
 					// })
-
-						User.update({mobile:req.query.mobile}, {$push:{ groups :group._id}}, null, function(err, numAffected){
+						//Add the group id to the currentUser
+						User.update({_id : userId}, {$push:{ groups :group._id}}, null, function(err, numAffected){
 							if (err) {
 								res.json({error:"Encountered Error while Updating: " + err})
 							}
 							//Increment the group members
 							group.groupMembers.$inc()
-							group.save(function(err, numAffected){
+							group.save(function(err){
 								if(err){
 									res.json({error:"Error while saving Group"+ err})
 								}
