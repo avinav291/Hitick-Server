@@ -15,7 +15,6 @@ module.exports = function(req, res){
 	User.findOne({mobile : req.query.mobile}, function(err, user){
 		if (err) {
 			console.log(err)
-			// res.status(404)
 			res.json({error:"Error at server level:"+err})
 			return
 		}
@@ -23,7 +22,6 @@ module.exports = function(req, res){
 			//No user with That UserName Exists
 			//No content Response code
 			console.log("No Existing User")
-			// res.status(204)
 			res.end(JSON.stringify({error: "No Existing User "}))
 			return
 		}
@@ -38,7 +36,6 @@ module.exports = function(req, res){
 			if(isMatch){
 				//The user is a match return him the values
 				// res.status(200)
-				//TODO:- Construct Proper JSON for Sending
 				console.log("Found A match")
 				Group.find({_id : {$in : user.groups}}, function(err, groups){
 					if(err){
@@ -48,7 +45,6 @@ module.exports = function(req, res){
 						res.json({error:"Could not validate Groups" + err})
 					}
 					console.log("returning Groups")
-					// res.status(200)
 					res.json({
 						usename:user.username,
 						password:user.password,
@@ -61,7 +57,6 @@ module.exports = function(req, res){
 			else{
 				//Invalid Password
 				console.log("Invalid Password")
-				// res.status(204)
 				res.json({error:"Invalid Password"})
 			}
 		})
