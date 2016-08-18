@@ -34,6 +34,7 @@ module.exports = function(req, res){
 
             submittedAt : currentDate,
             stipulatedTime : timeDiff,
+            modifiedAt:currentDate,
 
             voters : [],
             result : "Pending"

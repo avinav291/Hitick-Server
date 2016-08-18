@@ -20,6 +20,7 @@ var pollSchema = mongoose.Schema({
     // Timing variables of poll
     submittedAt: {type: Date, required: true},
     stipulatedTime: {type: Number, required: true},
+    modifiedAt:{type:Number, required:true},
 
     // Voter Id's and results
     voters: {type: Array},
