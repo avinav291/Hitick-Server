@@ -43,7 +43,7 @@
 <div class="container">
     <!-- The polls data -->
     <% polls.forEach(function (poll) { %>
-    <div class="panel panel-default">
+    <div class="panel panel-default" data-pollId = "<%= poll._id %>">
         <div class="panel-heading">
             <%= poll.pollTopic %>
         </div>
@@ -59,8 +59,10 @@
                     Not Voted : <%= poll.notVoted %>
                 </li>
             </ul>
-            <button class="btn btn-primary pull-right">Yes</button>
-            <button class="btn btn-primary pull-right">No</button>
+            <div class="btn-group pull-right">
+                <button class="btn btn-primary" id="yes-button">Yes</button>
+                <button class="btn btn-primary" id="no-button">No</button>
+            </div>
         </div>
     </div>
     <% }); %>

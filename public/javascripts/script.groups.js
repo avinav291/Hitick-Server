@@ -27,7 +27,7 @@ $(function () {
                         $.post('/poll', {
                             pollTopic: data.pollTopic,
                             timeHours: data.hours,
-                            timeDays : data.days
+                            timeDays: data.days
                         }).done(function (data) {
                             console.log(data);
                             window.location.href = data.redirect;
@@ -39,12 +39,23 @@ $(function () {
     }
 
 
-    $(".list-item").click(function () {
+    $(".btn-group button").click(function () {
         // Make a get request for the group page
-        $.get('/group', {groupId: $(this).attr("data-groupId")}, function (data) {
+        var buttonId = $(this).attr('id');
+        var vote = -1;
+        if (buttonId == 'yes-button') {
+            vote = 1;
+        }
+        if (buttonId == 'no-button') {
+            vote = 0;
+        }
+        var url = '/poll/' + $(this).closest(".panel").attr("data-pollId");
+        console.log(url);
+        $.post(url , {vote: vote}, function (data) {
             console.log(data);
             console.log(data.redirect);
             window.location.href = data.redirect;
         });
+
     });
 });
