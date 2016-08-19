@@ -7,7 +7,6 @@
 
 $(function () {
     if ($("#create-poll").length > 0) {
-
         $("#create-poll").click(function () {
             vex.dialog.open({
                 message: 'Enter the Poll Topic and the stipulated Time (days and hours):',

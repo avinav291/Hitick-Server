@@ -10,7 +10,7 @@ var Group = require('../models/Group');
 
 var ResponseEnum = require('../ResponseEnum');
 
-router.post('/', function (req, res) {
+router.post('/', function (req, res , next) {
     console.log("Poll post handler called");
     var groupId = mongoose.Types.ObjectId(req.session.groupId);
     if (groupId) {
@@ -20,15 +20,15 @@ router.post('/', function (req, res) {
         var hours = Number(req.body.timeHours);
 
         if (isNaN(days) || isNaN(hours)) {
-            res.send({redirect: '/'});
+            return res.send({redirect: '/'});
         }
 
         Group.findById(groupId, function (error, group) {
             if (error) {
-                res.send({redirect: '/'});
+                return res.send({redirect: '/'});
             }
             if (!group) {
-                res.send({redirect: '/'});
+                return res.send({redirect: '/'});
             }
             console.log("Found the group");
 
@@ -36,6 +36,7 @@ router.post('/', function (req, res) {
             var time = (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000);
 
             var createdAt = new Date();
+            var modifiedAt = new Date();
 
             var newPoll = new Poll({
                 groupId: groupId,
@@ -47,6 +48,7 @@ router.post('/', function (req, res) {
                 ongoing: true,
 
                 submittedAt: createdAt,
+                modifiedAt : 0,
                 stipulatedTime: time,
 
                 voters: [],
@@ -55,10 +57,11 @@ router.post('/', function (req, res) {
 
             newPoll.save(function (saveError) {
                 if (saveError) {
-                    res.send({redirect: '/'});
+                    return next(saveError);
                 }
                 console.log("Successfully saved the poll");
-                res.send({redirect: '/group/' + req.session.groupId});
+                return res.send({redirect: '/group/' + req.session.groupId});
+
             });
         });
     }
@@ -72,14 +75,14 @@ router.post('/:pollId', function (req, res) {
 
 
     if (isNaN(vote)) {
-        res.send({redirect: '/'});
+        return res.send({redirect: '/'});
     }
 
     // Update the poll data
     Poll.findById(pollId, function (error, poll) {
         console.log("Found the Poll!!!");
         if (error) {
-            res.send({redirect: '/'});
+            return res.send({redirect: '/'});
         }
 
         // Check if the user already exists
@@ -110,9 +113,9 @@ router.post('/:pollId', function (req, res) {
                 notVoted: notVoted
             }, null, function (updateErr, numAffected) {
                 if (updateErr) {
-                    res.send({redirect: '/'});
+                    return res.send({redirect: '/'});
                 }
-                res.send({redirect: '/group/' + req.session.groupId});
+                return res.send({redirect: '/group/' + req.session.groupId});
             });
         }
         // Else we just alter the values of constants and the user response
@@ -122,7 +125,7 @@ router.post('/:pollId', function (req, res) {
             }).response;
 
             if (vote == response) {
-                res.send({redirect: '/'});
+                return res.send({redirect: '/group/' + req.session.groupId});
             }
 
             if (vote == ResponseEnum.YES) {
@@ -139,9 +142,9 @@ router.post('/:pollId', function (req, res) {
                 opposed: opposed
             }, function (updateError, numAffected) {
                 if (updateError) {
-                    res.send({redirect: '/'});
+                    return res.send({redirect: '/'});
                 }
-                res.send({redirect: '/group/' + req.session.groupId});
+                return res.send({redirect: '/group/' + req.session.groupId});
             });
         }
     });

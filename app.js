@@ -1,3 +1,5 @@
+var debug = require('debug')('Hitick:server');
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -9,6 +11,7 @@ var cookieParser = require('cookie-parser');
 
 // Session Management
 var session = require("express-session");
+var sharedSession = require("express-socket.io-session");
 var flash = require("connect-flash");
 
 // Passport Authentication
@@ -28,11 +31,21 @@ var join = require('./routes/join');
 var group = require('./routes/group');
 var poll = require('./routes/poll');
 var sessionInfo = require('./routes/session');
-
 //API Router
 var api_v1 = require('./api/v1');
 
+
 var app = express();
+
+/* Get the port and set in express */
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+var server  = require("http").createServer(app);
+
+// Socket.IO
+var io = require('socket.io').listen(server);
+
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -56,6 +69,13 @@ app.use(session({
     saveUninitialized: true
 }));
 
+// Use shared session middleware for socket.io
+// setting autoSave:true
+io.use(sharedSession(session, cookieParser() ,{
+    resave : true,
+    autoSave:true
+}));
+
 // Setup Passport
 setupPassport();
 app.use(passport.initialize());
@@ -74,8 +94,19 @@ app.use('/group', group);
 app.use('/poll' , poll);
 app.use('/session' , sessionInfo);
 
-//Route for all API requets
+//Route for all API requests
 app.use('/api/v1', api_v1);
+
+
+/*
+ * SocketIO group joining, the connected socket will join the group
+ * */
+io.sockets.on('connection',function (socket) {
+    socket.on("Ping" , function (message) {
+        console.log(message);
+    });
+    console.log("Connection established");
+});
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -83,6 +114,7 @@ app.use(function (req, res, next) {
     err.status = 404;
     next(err);
 });
+
 
 // error handlers
 
@@ -109,4 +141,67 @@ app.use(function (err, req, res, next) {
 });
 
 
-module.exports = app;
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
+}
+

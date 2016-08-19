@@ -18,18 +18,21 @@ function isAuthenticated(request) {
 router.get('/', function (req, res, next) {
 
     /*
-    * If the user is not authenticated we render the index webpage without the groups
-    * */
-    if (!isAuthenticated(req))
-        res.render('index' , {groups : null});
-
+     * If the user is not authenticated we render the index webpage without the groups
+     * */
+    if (!isAuthenticated(req)) {
+        return res.render("index" , {groups: null});
+    }
     /*
-    * If the user is authenticated we render the index page with the groups data
-    * */
+     * If the user is authenticated we render the index page with the groups data
+     * */
     var currentUser = req.user;
-    Group.find({_id : {$in : currentUser.groups}} , function(err , groups){
-       if(err){res.render('index' , {groups : null});}
-       res.render('index' , {groups : groups});
+    Group.find({_id: {$in: currentUser.groups}}, function (err, groups) {
+        if (err) {
+            return next(err);
+        } else {
+            return res.render('index', {groups: groups});
+        }
     });
 });
 
