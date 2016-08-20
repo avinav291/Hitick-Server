@@ -87,25 +87,26 @@ app.use('/logout', logout);
 app.use('/create', create);
 app.use('/join', join);
 app.use('/group', group);
-app.use('/poll', poll);
 app.use('/session', sessionInfo);
 
 //Route for all API requests
 app.use('/api/v1', api_v1);
+
+// Inject Socket.IO object in the route handlers
+app.use('/poll', poll(io));
 
 
 /*
  * SocketIO group joining, the connected socket will join the group
  * */
 io.sockets.on('connection', function (socket) {
-    console.log("Connection established");
-
     socket.on("Ping", function (message) {
         console.log(message);
     });
 
+    // If the groupId is in session object join the socket to that group
     if (socket.handshake.session.groupId) {
-        console.log(socket.handshake.session.groupId);
+        socket.join(socket.handshake.session.groupId);
     }
 });
 
