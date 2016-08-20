@@ -6,7 +6,7 @@
  */
 
 $(function () {
-    var socket = io.connect("http://localhost:3000");
+    var socket = io();
     socket.on("Update" , function (data) {
         if (data.redirect){
             window.location.href = data.redirect;

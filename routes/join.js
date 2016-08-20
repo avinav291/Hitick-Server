@@ -18,7 +18,7 @@ router.post('/', function (request, response, next) {
         }
         if (!group) {
             request.flash('error', 'No such group exists');
-            response.send({redirect: '/'});
+            return response.send({redirect: '/'});
         }
         var currentUser = request.user;
         group.checkPassword(groupPassword, function (error, isMatch) {
