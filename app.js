@@ -46,7 +46,7 @@ var app = express();
 var port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
-var server  = require("http").createServer(app);
+var server = require("http").createServer(app);
 
 // Socket.IO
 var io = require('socket.io').listen(server);
@@ -87,8 +87,8 @@ app.use('/logout', logout);
 app.use('/create', create);
 app.use('/join', join);
 app.use('/group', group);
-app.use('/poll' , poll);
-app.use('/session' , sessionInfo);
+app.use('/poll', poll);
+app.use('/session', sessionInfo);
 
 //Route for all API requests
 app.use('/api/v1', api_v1);
@@ -97,11 +97,16 @@ app.use('/api/v1', api_v1);
 /*
  * SocketIO group joining, the connected socket will join the group
  * */
-io.sockets.on('connection',function (socket) {
-    socket.on("Ping" , function (message) {
+io.sockets.on('connection', function (socket) {
+    console.log("Connection established");
+
+    socket.on("Ping", function (message) {
         console.log(message);
     });
-    console.log("Connection established");
+
+    if (socket.handshake.session.groupId) {
+        console.log(socket.handshake.session.groupId);
+    }
 });
 
 // catch 404 and forward to error handler
