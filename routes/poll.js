@@ -60,7 +60,7 @@ module.exports = function (io) {
                         return next(saveError);
                     }
                     res.send({redirect: '/group/' + req.session.groupId});
-                    return io.to(req.session.groupId).emit("Update", "Update data");
+                    return io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
                 });
             });
         }
@@ -144,7 +144,7 @@ module.exports = function (io) {
                         return res.send({redirect: '/'});
                     }
                     res.send({redirect: '/group/' + req.session.groupId});
-                    return io.to(req.session.groupId).emit("Update", "Update data");
+                    return io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
                 });
             }
         });

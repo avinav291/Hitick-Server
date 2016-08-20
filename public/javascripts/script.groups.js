@@ -8,7 +8,9 @@
 $(function () {
     var socket = io.connect("http://localhost:3000");
     socket.on("Update" , function (data) {
-        console.log(data);
+        if (data.redirect){
+            window.location.href = data.redirect;
+        }
     });
     if ($("#create-poll").length > 0) {
         $("#create-poll").click(function () {
