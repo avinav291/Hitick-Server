@@ -36,13 +36,13 @@ router.post("/", function (req, res, next) {
                 if (err) {
                     next(err);
                 }
-                console.log("Udated the groups array");
+                
                 next();
             });
         });
     });
 }, function (req, res) {
-    console.log("Next called()");
+    
     res.send({redirect : '/'});
 });
 

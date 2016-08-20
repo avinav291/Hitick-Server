@@ -11,7 +11,7 @@ var Group = require('../models/Group');
 var ResponseEnum = require('../ResponseEnum');
 
 router.post('/', function (req, res , next) {
-    console.log("Poll post handler called");
+    
     var groupId = mongoose.Types.ObjectId(req.session.groupId);
     if (groupId) {
 
@@ -30,7 +30,7 @@ router.post('/', function (req, res , next) {
             if (!group) {
                 return res.send({redirect: '/'});
             }
-            console.log("Found the group");
+            
 
             var notVoted = group.groupMembers;
             var time = (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000);
@@ -59,7 +59,7 @@ router.post('/', function (req, res , next) {
                 if (saveError) {
                     return next(saveError);
                 }
-                console.log("Successfully saved the poll");
+                
                 return res.send({redirect: '/group/' + req.session.groupId});
 
             });
@@ -80,7 +80,7 @@ router.post('/:pollId', function (req, res) {
 
     // Update the poll data
     Poll.findById(pollId, function (error, poll) {
-        console.log("Found the Poll!!!");
+        
         if (error) {
             return res.send({redirect: '/'});
         }

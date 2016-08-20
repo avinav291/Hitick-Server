@@ -22,7 +22,7 @@ router.post('/', function (request, response, next) {
         }
         var currentUser = request.user;
         group.checkPassword(groupPassword, function (error, isMatch) {
-            console.log(groupPassword);
+            
             if (error) {
                 next(error);
             }
@@ -41,7 +41,7 @@ router.post('/', function (request, response, next) {
                         if (err) {
                             next(err);
                         }
-                        console.log("Udated the groups array");
+                        
                         next();
                     });
                 });
