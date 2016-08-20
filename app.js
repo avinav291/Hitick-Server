@@ -10,8 +10,13 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 
 // Session Management
-var session = require("express-session");
+var session = require("express-session")({
+    secret: "TKRv0IJs=HYqrvagQ#&!F!%V]Ww/4KiVs$s,<<MX",
+    resave: true,
+    saveUninitialized: true
+});
 var sharedSession = require("express-socket.io-session");
+
 var flash = require("connect-flash");
 
 // Passport Authentication
@@ -63,18 +68,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 mongoose.connect('mongodb://localhost:27017/HitickDb');
 
 //Session Middleware
-app.use(session({
-    secret: "TKRv0IJs=HYqrvagQ#&!F!%V]Ww/4KiVs$s,<<MX",
-    resave: true,
-    saveUninitialized: true
-}));
+app.use(session);
 
-// Use shared session middleware for socket.io
-// setting autoSave:true
-io.use(sharedSession(session, cookieParser() ,{
-    resave : true,
-    autoSave:true
-}));
+io.use(sharedSession(session));
 
 // Setup Passport
 setupPassport();
