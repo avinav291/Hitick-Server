@@ -60,10 +60,12 @@
                     Not Voted : <%= poll.notVoted %>
                 </li>
             </ul>
+            <% if (poll.ongoing){ %>
             <div class="btn-group pull-right">
                 <button class="btn btn-primary" id="yes-button">Yes</button>
                 <button class="btn btn-primary" id="no-button">No</button>
             </div>
+            <% } %>
         </div>
     </div>
     <% }); %>

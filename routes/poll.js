@@ -4,9 +4,11 @@
 var express = require('express');
 var router = express.Router();
 var mongoose = require('mongoose');
+var schedule = require('node-schedule');
 
 var Poll = require('../models/Poll');
 var Group = require('../models/Group');
+
 
 var ResponseEnum = require('../ResponseEnum');
 module.exports = function (io) {
@@ -38,6 +40,12 @@ module.exports = function (io) {
                 var createdAt = new Date();
                 var modifiedAt = new Date();
 
+                var endDate = new Date(createdAt.getTime() + time);
+
+                console.log(time);
+                console.log(endDate);
+
+
                 var newPoll = new Poll({
                     groupId: groupId,
 
@@ -59,6 +67,23 @@ module.exports = function (io) {
                     if (saveError) {
                         return next(saveError);
                     }
+
+                    /* The poll has been saved successfully
+                     * So now we add the timer task for the poll to expire.
+                     * */
+                    var timerTask = schedule.scheduleJob(endDate, function () {
+                        var pollId = newPoll._id;
+                        console.log("Poll expired");
+                        Poll.update({_id: pollId}, {ongoing: false}, function (updateError) {
+                            if (updateError) {
+                                return next(updateError);
+                            }
+                            console.log("Poll updated");
+                            return io.to(req.session.groupId)
+                                .emit("Update", {redirect: '/group/' + req.session.groupId});
+                        });
+                    });
+
                     res.send({redirect: '/group/' + req.session.groupId});
                     return io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
                 });

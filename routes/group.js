@@ -20,13 +20,13 @@ router.get('/:groupId', function (request, response) {
     var groupId = mongoose.Types.ObjectId(request.params.groupId);
     Group.findById(groupId , function (error, group) {
         if (error){
-            response.redirect('/');
+            return response.redirect('/');
         }
         Poll.find({groupId : groupId} , function (err, polls) {
            if (err){
-               response.redirect('/');
+               return response.redirect('/');
            }
-            response.render('group' , {group : group , polls : polls});
+            return response.render('group' , {group : group , polls : polls});
         });
     });
 });
