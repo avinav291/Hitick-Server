@@ -114,7 +114,8 @@ module.exports = function (io) {
                     if (updateErr) {
                         return res.send({redirect: '/'});
                     }
-                    return res.send({redirect: '/group/' + req.session.groupId});
+                    res.send({redirect: '/group/' + req.session.groupId});
+                    return io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
                 });
             }
             // Else we just alter the values of constants and the user response

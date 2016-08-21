@@ -6,12 +6,18 @@
  */
 
 $(function () {
-    var socket = io();
+    var socket = io({reconnection : true});
     socket.on("Update" , function (data) {
         if (data.redirect){
             window.location.href = data.redirect;
         }
     });
+
+    // Ping the server every 10s to keep the socket alive
+    setInterval(function () {
+        socket.emit("Ping" , {message : "Pinging the server"});
+    },10*1000);
+
     if ($("#create-poll").length > 0) {
         $("#create-poll").click(function () {
             vex.dialog.open({
