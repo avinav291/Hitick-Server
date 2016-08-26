@@ -36,27 +36,28 @@ module.exports = function(req, res){
 			if(isMatch){
 				//The user is a match return him the values
 				// res.status(200)
-				console.log("Found A match")
+				console.log("Found A match");
 				Group.find({_id : {$in : user.groups}}, function(err, groups){
 					if(err){
 						//Could not validate Groups
-						console.log("Could Not VAlidate Groups:"+err)
-						res.status(204)
+						console.log("Could Not VAlidate Groups:"+err);
+						res.status(204);
 						res.json({error:"Could not validate Groups" + err})
 					}
-					console.log("returning Groups")
+					console.log("returning Groups");
 					res.json({
-						usename:user.username,
+						_id : user._id,
+						username:user.username,
 						password:user.password,
 						mobile:user.mobile,
 						email:user.email,
 						groups:groups
-					})
+					});
 				})
 			}
 			else{
 				//Invalid Password
-				console.log("Invalid Password")
+				console.log("Invalid Password");
 				res.json({error:"Invalid Password"})
 			}
 		})

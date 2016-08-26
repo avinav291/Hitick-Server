@@ -85,7 +85,6 @@ app.use('/login', login);
 app.use('/signup', signup);
 app.use('/logout', logout);
 app.use('/create', create);
-app.use('/join', join);
 app.use('/group', group);
 app.use('/session', sessionInfo);
 
@@ -94,7 +93,7 @@ app.use('/api/v1', api_v1);
 
 // Inject Socket.IO object in the route handlers
 app.use('/poll', poll(io));
-
+app.use('/join', join(io));
 
 /*
  * SocketIO group joining, the connected socket will join the group

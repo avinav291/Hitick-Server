@@ -8,10 +8,16 @@ module.exports = function (grunt) {
                 src: "routes/*.js"
             }
         }
+
+        sloc : {
+          files: {
+            'api' : '*.js'
+          }
+        }
     });
 
     grunt.loadNpmTasks("grunt-remove-logging");
-
+    grunt.loadNpmTasks("grunt-sloc");
     grunt.registerTask("default", ["removelogging"]);
 
 };
