@@ -15,15 +15,15 @@ module.exports = function(req, res){
 	//Find if the current group already exists
 	Group.findOne({groupName:req.query.groupName}, function(err, group){
 		if (err) {
-			res.json({error: "Internal Server Error: "+err})
+			res.json({error: "Internal Server Error: "+err});
 		}
 		if (group) {
-			res.json({error:"Group already exists"})
+			res.json({error:"Group already exists"});
 		}
 		//Find the user for the group details to be appended
 		User.findOne({mobile : req.query.mobile}, function(err, currentUser){
 			if(err){
-				res.json({error:"Internal Server Error"+ err})
+				res.json({error:"Internal Server Error"+ err});
 			}
 			var newGrp = new Group({
 					groupName: req.query.groupName,
@@ -33,14 +33,14 @@ module.exports = function(req, res){
 				});
 			newGrp.save(function(err){
 				if(err){
-					res.json({"error" : "Error during Save" + err})
+					res.json({"error" : "Error during Save" + err});
 				}
 				// User.update({_id:currentUser._id}, {$push:{groups:newGrp._id}}, null, function(err, updatedGrp))
 				//New method
 				//Do not need to use update stmt rather just update the current params and save the model doc
 				currentUser.groups.$push(newGrp._id);
 				currentUser.save();
-				res.json(newGrp)
+				res.json(newGrp);
 			})
 		})
 	})

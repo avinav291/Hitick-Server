@@ -11,27 +11,29 @@ var mongoose = require('mongoose')
 var User = require("../../models/User")
 var Group = require('../../models/Group')
 
+//Query Params Required: mobile, password
+
 module.exports = function(req, res){
 	User.findOne({mobile : req.query.mobile}, function(err, user){
 		if (err) {
-			console.log(err)
-			res.json({error:"Error at server level:"+err})
-			return
+			console.log(err);
+			res.json({error:"Error at server level:"+err});
+			return;
 		}
 		if (!user) {
 			//No user with That UserName Exists
 			//No content Response code
-			console.log("No Existing User")
-			res.end(JSON.stringify({error: "No Existing User "}))
-			return
+			console.log("No Existing User");
+			res.end(JSON.stringify({error: "No Existing User "}));
+			return;
 		}
 		user.checkPassword(req.query.password, function(err, isMatch){
 			if(err){
 				//Error: Error in matching Password
-				console.log(err)
+				console.log(err);
 				// res.status(204)
-				res.json({error:err})
-				return
+				res.json({error:err});
+				return;
 			}
 			if(isMatch){
 				//The user is a match return him the values
@@ -40,9 +42,9 @@ module.exports = function(req, res){
 				Group.find({_id : {$in : user.groups}}, function(err, groups){
 					if(err){
 						//Could not validate Groups
-						console.log("Could Not VAlidate Groups:"+err);
+						console.log("Could Not Validate Groups:"+err);
 						res.status(204);
-						res.json({error:"Could not validate Groups" + err})
+						res.json({error:"Could not validate Groups" + err});
 					}
 					console.log("returning Groups");
 					res.json({
@@ -53,14 +55,14 @@ module.exports = function(req, res){
 						email:user.email,
 						groups:groups
 					});
-				})
+				});
 			}
 			else{
 				//Invalid Password
 				console.log("Invalid Password");
-				res.json({error:"Invalid Password"})
+				res.json({error:"Invalid Password"});
 			}
-		})
+		});
 
-	})
+	});
 }

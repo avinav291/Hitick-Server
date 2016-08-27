@@ -15,12 +15,12 @@ module.exports = function(req, res){
 	//Find a matching User and return error if USer already exists
 	User.findOne({mobile: req.query.mobile}, function(err, user){
 		if(err){
-			res.json({error:"Internal Server Error"})
+			res.json({error:"Internal Server Error"});
 			return
 		}
 		if(user){
 			//User exists in the dataBase
-			res.json({error:"User already exists"})
+			res.json({error:"User already exists"});
 		}
 		else{
 			//Create New User with params
@@ -31,13 +31,13 @@ module.exports = function(req, res){
     			email: req.query.email,
     			gcmRegId: req.query.gcmRegId,
     			groups: []
-			})
+			});
 			newUser.save(function(err){
 				if(err){
-					res.json({error:"Could not complete the save request. Pls try after some time"})
+					res.json({error:"Could not complete the save request. Pls try after some time"});
 				}
 				//Authenticating the user again with the login action
-				login(req, res)
+				login(req, res);
 			})
 		}
 	})

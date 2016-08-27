@@ -8,20 +8,21 @@ var mongoose = require('mongoose')
 var User = require('../../models/User')
 var Group  =require('../../models/Group')
 
+//Query Params: groupId, endDate
 module.exports = function(req, res){
-    var groupId  = mongoose.Schema.Types.ObjectId(req.query.groupId)
-    var endDate = new Date(req.query.endDate)
-    var currentDate = Date.now()
+    var groupId  = mongoose.Types.ObjectId(req.query.groupId);
+    var endDate = new Date(Number(req.query.endDate));
+    var currentDate = Date.now();
 
-    var timeDiff = endDate - currentDate
+    var timeDiff = endDate - currentDate;
     if(timeDiff<0){
-        res.json({error:"This poll is a past"})
+        res.json({error:"This poll is a past"});
     }
 
     //Find the group being referenced
     Group.findById(groupId, function (err, group) {
         if(err || !group){
-            res.json({error:"Could not find the specified Group"})
+            res.json({error:"Could not find the specified Group"});
         }
         var poll = new Poll({
             groupId : groupId,
@@ -38,13 +39,13 @@ module.exports = function(req, res){
 
             voters : [],
             result : "Pending"
-        })
+        });
 
         poll.save(function (err) {
             if(err){
-                res.json({error:"Internal Server Error while generating Poll:"+err})
+                res.json({error:"Internal Server Error while generating Poll:"+err});
             }
-            res.json(poll)
+            res.json(poll);
         })
     })
 }

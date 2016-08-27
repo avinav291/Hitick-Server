@@ -46,7 +46,7 @@ api.get('/poll/latest', function(req, res){
 })
 
 api.get('/poll/past', function(req, res){
-	console.log('get past polls request from' + req.query.userId)
+	// console.log('get past polls request from' + req.query.userId)
 	pastPoll(req, res)
 })
 

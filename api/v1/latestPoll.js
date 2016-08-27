@@ -13,20 +13,22 @@ var Poll = require('../../models/Poll')
 
 //This module return Polls for a user who has new polls in any of
 //  his groups after the last Update Time
+//Request Query Params: userId, updateTime
+
 module.exports = function(req, res){
 
-    var userId = mongoose.Schema.Types.ObjectId(req.query.userId)
-    User.findOne({_id : userId}, function(err, currentUser){
+    var userId = mongoose.Types.ObjectId(req.query.userId)
+    User.findById(userId, function(err, currentUser){
         if(err || !currentUser){
             res.json({error:"Could not find the registered User"})
         }
-        var lastUpdateTime = req.query.updateTime
+        var lastUpdateTime = new Date(Number(req.query.updateTime))
 
-        Poll.find({$and:[ {modifiedAt:{$gt:lastUpdateTime}}, {groupId:{$in:user.groups}}]}, function (error, polls) {
+        Poll.find({$and:[ {modifiedAt:{$gt:lastUpdateTime}}, {groupId:{$in:currentUser.groups}}]}, function (error, polls) {
             if(error || !polls){
                 res.json({error:"Error Finding Polls"})
             }
-
+            // console.log(polls)
             res.json(polls)
         })
 
