@@ -36,24 +36,29 @@ module.exports = function(req, res){
 				return;
 			}
 			if(isMatch){
-				//The user is a match return him the values
-				// res.status(200)
-				console.log("Found A match");
-				Group.find({_id : {$in : user.groups}}, function(err, groups){
-					if(err){
-						//Could not validate Groups
-						console.log("Could Not Validate Groups:"+err);
-						res.status(204);
-						res.json({error:"Could not validate Groups" + err});
+				// If the user matched then update his FCM registration Id
+				var regId = req.query.gcmRegId;
+				User.update({_id : user._id} , {gcmRegId : regId} , null , function (updateError) {
+					if (updateError){
+						res.json({error : "Couldn't update FCM id"});
+						return;
 					}
-					console.log("returning Groups");
-					res.json({
-						_id : user._id,
-						username:user.username,
-						password:user.password,
-						mobile:user.mobile,
-						email:user.email,
-						groups:groups
+					Group.find({_id : {$in : user.groups}}, function(err, groups){
+						if(err){
+							//Could not validate Groups
+							console.log("Could Not Validate Groups:"+err);
+							res.json({error:"Could not validate Groups" + err});
+							return;
+						}
+						console.log("returning Groups");
+						return res.json({
+							_id : user._id,
+							username:user.username,
+							password:user.password,
+							mobile:user.mobile,
+							email:user.email,
+							groups:groups
+						});
 					});
 				});
 			}
