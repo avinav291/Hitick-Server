@@ -11,7 +11,7 @@ var mongoose = require('mongoose')
 var User = require("../../models/User")
 var Group = require('../../models/Group')
 
-//Query Params Required: mobile, password
+//Query Params Required: mobile, password, gcmRegId
 
 module.exports = function(req, res){
 	User.findOne({mobile : req.query.mobile}, function(err, user){
