@@ -8,10 +8,11 @@ var schedule = require('node-schedule');
 
 var Poll = require('../models/Poll');
 var Group = require('../models/Group');
-
+var User = require('../models/User');
 
 var ResponseEnum = require('../ResponseEnum');
-module.exports = function (io) {
+
+module.exports = function (io, fcm) {
     router.post('/', function (req, res, next) {
 
         var groupId = mongoose.Types.ObjectId(req.session.groupId);
@@ -85,7 +86,33 @@ module.exports = function (io) {
                     });
 
                     res.send({redirect: '/group/' + req.session.groupId});
-                    return io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
+
+                    // Emit to all connected clients
+                    io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
+
+                    // Send to all fcm devices
+                    User.find({groups: groupId}, function (error, users) {
+                        if (error) {
+                            return;
+                        }
+                        users.forEach(function (user) {
+                            if (user.gcmRegId) {
+                                var message = {
+                                    to: user.gcmRegId,
+                                    data: {
+                                        poll: newPoll
+                                    }
+                                };
+                                fcm.send(message, function (err, response) {
+                                    if (err) {
+                                        console.log("Something has gone wrong!");
+                                    } else {
+                                        console.log("Successfully sent with response: ", response);
+                                    }
+                                });
+                            }
+                        });
+                    });
                 });
             });
         }
@@ -140,7 +167,35 @@ module.exports = function (io) {
                         return res.send({redirect: '/'});
                     }
                     res.send({redirect: '/group/' + req.session.groupId});
-                    return io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
+                    io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
+                    // Send to all fcm devices
+                    Poll.findById(poll._id, function (pollError, updatedPoll) {
+                        User.find({groups: mongoose.Types.ObjectId(req.session.groupId)}, function (error, users) {
+                            if (pollError) {
+                                return;
+                            }
+                            users.forEach(function (user) {
+                                console.log(user.username);
+                                if (user.gcmRegId) {
+                                    var message = {
+                                        to: user.gcmRegId,
+                                        data: {
+                                            poll: updatedPoll
+                                        }
+                                    };
+                                    fcm.send(message, function (err, response) {
+
+                                        if (err) {
+                                            console.log("Something has gone wrong!");
+                                        } else {
+                                            console.log("Successfully sent with response: ", response);
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    });
+
                 });
             }
             // Else we just alter the values of constants and the user response
@@ -169,11 +224,44 @@ module.exports = function (io) {
                     if (updateError) {
                         return res.send({redirect: '/'});
                     }
+
                     res.send({redirect: '/group/' + req.session.groupId});
-                    return io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
+
+                    // Send to all connected clients
+                    io.to(req.session.groupId).emit("Update", {redirect: '/group/' + req.session.groupId});
+
+                    // Send to all fcm devices
+                    Poll.findById(poll._id, function (pollError, updatedPoll) {
+                        User.find({groups: mongoose.Types.ObjectId(req.session.groupId)}, function (error, users) {
+                            if (pollError) {
+                                return;
+                            }
+                            users.forEach(function (user) {
+                                console.log(user.username);
+                                if (user.gcmRegId) {
+                                    var message = {
+                                        to: user.gcmRegId,
+                                        data: {
+                                            poll: updatedPoll
+                                        }
+                                    };
+                                    fcm.send(message, function (err, response) {
+
+                                        if (err) {
+                                            console.log("Something has gone wrong!");
+                                        } else {
+                                            console.log("Successfully sent with response: ", response);
+                                        }
+                                    });
+                                }
+                            });
+                        });
+                    });
+
                 });
             }
         });
     });
+
     return router;
 };

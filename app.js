@@ -51,6 +51,11 @@ var server = require("http").createServer(app);
 // Socket.IO
 var io = require('socket.io').listen(server);
 
+// Firebase Cloud Messaging
+var FCM = require("fcm-node");
+
+var serverKey = "AIzaSyCeUI8Ws4WWXBtQLgvcSn7ZHjL3yh9T_Fg";
+var fcm = new FCM(serverKey);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -92,8 +97,8 @@ app.use('/session', sessionInfo);
 app.use('/api/v1', api_v1);
 
 // Inject Socket.IO object in the route handlers
-app.use('/poll', poll(io));
-app.use('/join', join(io));
+app.use('/poll', poll(io , fcm));
+app.use('/join', join(io , fcm));
 
 /*
  * SocketIO group joining, the connected socket will join the group

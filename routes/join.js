@@ -8,7 +8,7 @@ var Poll = require('../models/Poll');
 
 var router = express.Router();
 
-module.exports = function (io) {
+module.exports = function (io , fcm) {
     router.post('/', function (request, response, next) {
         var groupName = request.body.groupName;
         var groupPassword = request.body.groupPassword;

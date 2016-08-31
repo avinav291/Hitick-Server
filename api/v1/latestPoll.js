@@ -17,12 +17,12 @@ var Poll = require('../../models/Poll')
 
 module.exports = function(req, res){
 
-    var userId = mongoose.Types.ObjectId(req.query.userId)
+    var userId = mongoose.Types.ObjectId(req.query.userId);
     User.findById(userId, function(err, currentUser){
         if(err || !currentUser){
             res.json({error:"Could not find the registered User"})
         }
-        var lastUpdateTime = new Date(Number(req.query.updateTime))
+        var lastUpdateTime = new Date(Number(req.query.updateTime));
 
         Poll.find({$and:[ {modifiedAt:{$gt:lastUpdateTime}}, {groupId:{$in:currentUser.groups}}]}, function (error, polls) {
             if(error || !polls){
@@ -33,4 +33,4 @@ module.exports = function(req, res){
         })
 
     })
-}
+};
